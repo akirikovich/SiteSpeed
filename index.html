@@ -54,6 +54,34 @@
 <h3>
 <a id="Уменьшение-числа-запросов" class="anchor" href="#%D0%A3%D0%BC%D0%B5%D0%BD%D1%8C%D1%88%D0%B5%D0%BD%D0%B8%D0%B5-%D1%87%D0%B8%D1%81%D0%BB%D0%B0-%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%BE%D0%B2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Уменьшение числа запросов</h3>
 
+<p>Для уменьшение числа запросов нам нужно объединить CSS и JS файлы один, чтобы вместо 10-ти запросов, у нас был всего лишь один. Для этого можно воспользоваться написанным мной классом: <a href="https://github.com/akirikovich/filecache.php">https://github.com/akirikovich/filecache.php</a>.</p>
+
+<p>Также, частая проблема — использование множества иконок (небольших картинок) в дизайне сайта. Когда мы указываем в CSS файле путь к картинке, для её получения также создается отдельный запрос. Для оптимизации этого момента, можно использовать технику спрайтов (sprites). Смысл состоит в том, что необходимо собрать все картинки воедино в один большой файл, а в CSS перемещаться по нему с помощью свойства <code>background-position</code>. </p>
+
+<h3>
+<a id="Уменьшение-объёма-данных" class="anchor" href="#%D0%A3%D0%BC%D0%B5%D0%BD%D1%8C%D1%88%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BE%D0%B1%D1%8A%D1%91%D0%BC%D0%B0-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85" aria-hidden="true"><span class="octicon octicon-link"></span></a>Уменьшение объёма данных</h3>
+
+<p>Мы имеем возможность архивировать информацию, которая передается от сервера клиенту. Т.е. сервер архивирует файл, затем передаёт уже уменьшенный по размеру архив, браузер получает этот архив и распаковывает его.</p>
+
+<p>Пример кода для настройки модуля gzip для веб-сервера apache</p>
+
+<pre><code>&lt;IfModule mod_gzip.c&gt;
+    mod_gzip_on         Yes
+    mod_gzip_dechunk    Yes
+    mod_gzip_item_include file      \.(html?|txt|css|js|php|pl)$
+    mod_gzip_item_include mime      ^text\.*
+    mod_gzip_item_include mime      ^application/x-javascript.*
+    mod_gzip_item_include mime      ^application/x-font-woff.*
+    mod_gzip_item_exclude mime      ^image\.*
+    mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+&lt;/IfModule&gt;
+&lt;ifModule mod_deflate.c&gt;
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript application/x-font-woff image/jpg image/jpeg
+&lt;/ifModule&gt;
+</code></pre>
+
+<p>Этот код нужно поместить в файл .htaccess в корне сайта.</p>
+
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/akirikovich/SiteSpeed">Скорость загрузки сайта</a> is maintained by <a href="https://github.com/akirikovich">akirikovich</a>.</span>
 
